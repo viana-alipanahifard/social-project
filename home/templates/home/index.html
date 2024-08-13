@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <form action="" method="get" class="btn btn-outline-secondary">
+        {{ form.as_p }}
+        <input type="submit" value="Search" class="btn btn-outline-secondary">
+    </form><br/><br/>
+
+    <div class="card">
+        {% for post in posts %}
+        <a href="{{ post.get_absolute_url }}">{{ post.body|truncatewords:8 }}</a>
+        {% endfor %}
+    </div>
+    <footer>
+        <div class="card text-center" style="margin: 0;">
+           <div class="card-header"  style="background-color: #FDCEDF;">
+             developed by viana
+           </div>
+           <div class="card-body">
+             <h5 class="card-title">connect whit developer</h5>
+             <a href="https://www.linkedin.com/in/viana-alipanahifard-bb186b28a/" class="btn btn-outline-primary">linkedin</a>
+             <a href="https://github.com/viana-alipanahifard" class="btn btn-outline-primary">github</a>
+           </div>
+     </footer>
+{% endblock %}

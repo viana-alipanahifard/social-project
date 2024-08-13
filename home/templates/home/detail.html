@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    {% if request.user.id == post.user.id%}
+         <a href="{% url 'home:post_delete' post.id %}" class="btn btn-light">Delete</a>
+         <a href="{% url 'home:post_update' post.id %}" class="btn btn-light">Update</a>
+    {% endif %}
+
+    <p><a href="{% url 'account:profile_user' post.user.id %}">{{ post.user}}</a>-{{post.update|date:"Y-M"}}</p>
+    <p>{{ post.body}}</p>
+
+
+{% if request.user.is_authenticated %}
+
+    <a href="{% url 'home:post_like' post.id %}" class="{% if can_like %} btn btn-outline-danger col-md-2{% endif %} btn btn-light">Like | {{ post.Likes_count }}</a>
+
+
+
+
+<form action="" method="post" class="col-md-6">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Send">
+</form> <br/>
+{% else %}
+<p class="alert alert-danger">Only logged in users can comment.</p>
+{% endif %}
+
+{% for comment in comments %}
+    <div class="card-body" style="background-color: #FDCEDF; margin-bottom: 20px;">
+    <p class="card-header">{{ comment.user }} | {{ comment.created|timesince }}</p>
+    <hr>
+    <p class="card-body">{{ comment.body }}</p><br>
+
+    {% if request.user.is_authenticated %}
+    <div class="reply-form" style="margin-top: 15px;">
+       
+        <form action="{% url 'home:add_reply' post.id comment.id %}" method="post" class="col-8" >
+              {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="send">
+        </form>
+    </div>
+    {% endif %}
+
+
+    {% for replay in comment.rcomments.all %}
+    <div class="reply-comment" style="padding-left: 20px; background-color: #C1ECE4; margin-top: 10px;">
+       <i><b>{{replay.user}}</i></b> | {{ comment.created|timesince }}<hr> <p>{{replay.body}}</p>
+    </div>
+    {% endfor %}
+    </div>  
+ 
+
+            {% empty %}
+        <p>No comments yet!</p>
+{% endfor %}
+    
+    
+    
+{% endblock content %}
+    
